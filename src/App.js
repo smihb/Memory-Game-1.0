@@ -6,76 +6,66 @@ import './App.css';
 
 import 'font-awesome/css/font-awesome.css';
 
-
 const getInitialState = () =>{
   const cards = DealCards();
   return{
     cards,
-    parejaSeleccionada: [],
-    estaComparando: false,
-    girada: true
+    selectedCards: [],
+    attemps: 0 
   }
 }
-class App extends Component{
 
+class App extends Component{
   constructor(props){
     super(props);
     this.state = getInitialState();
   }
- 
   render(){
     const {cards} = this.state;
     return (
       <div className="App"  >
-      <Header/>
-      <Board cards={cards} 
-      parejaSeleccionada={this.state.parejaSeleccionada}
-      seleccionarCarta={(carta) => this.seleccionarCarta(carta)}
-      estaComparando={this.state.estaComparando}
-      girada={this.state.girada} />
-    </div>
+        <Header 
+        attemps={this.state.attemps}
+        restartGame={()=>this.restartGame()}
+        />
+        <Board 
+          cards={cards}
+          selectCard={(card)=> this.selectCard(card)}
+        />
+      </div>
     );
   }
-
-  seleccionarCarta(carta){
-    if(this.state.estaComparando || 
-      this.state.parejaSeleccionada.indexOf(carta)>-1 ||
-      carta.isMatch){
-        return;
+  
+  selectCard(cardClicked){
+    if(cardClicked.flipped || 
+    this.state.selectedCards.length === 2){
+      return
     }
-    const parejaSeleccionada = [...this.state.parejaSeleccionada, carta]
-    this.setState({
-      parejaSeleccionada
-    })
-    if(parejaSeleccionada.length === 2){
-      this.compararPareja(parejaSeleccionada)
-    }
-  }
-
-  compararPareja(parejaSeleccionada){
-    this.setState({estaComparando: true});
-
-    const [primeraCarta, segundaCarta] = parejaSeleccionada
-    let baraja = this.state.cards
-
+    cardClicked.flipped = true
     
-    if(primeraCarta.icon === segundaCarta.icon){
-      baraja = baraja.map((carta)=>{
-        if(carta.icon !== primeraCarta.icon){
-          return carta
-        }
-        return{...carta, isMatch: true}
-      })
+    const coupleOfCards = [...this.state.selectedCards, cardClicked]
+    this.setState({selectedCards: coupleOfCards})
+
+    if(coupleOfCards.length === 2){
+      const [cardOne, cardTwo] = coupleOfCards
+      if(cardOne.icon === cardTwo.icon){
+        coupleOfCards.map((card)=>{return card.isMatch = true})
+        this.setState({selectedCards: []})
+      }else{
+        setTimeout(() => {
+          coupleOfCards.map((card)=>{return card.flipped = false})
+          this.setState({selectedCards: []})
+        }, 1000);
+      }
+      let attempsNumber = this.state.attemps
+      this.setState({attemps: attempsNumber+1})
+      console.log('intentos', this.state.attemps) 
     }
-    setTimeout(()=>{
-      this.setState({
-        parejaSeleccionada: [],
-        cards: baraja,
-        estaComparando:false
-      })
-    }, 1000)
-    console.log(parejaSeleccionada)
   }
-}
+  restartGame(){
+    const cards = DealCards()
+    this.setState({cards, attemps: 0})
+  }
+}  
 
 export default App;

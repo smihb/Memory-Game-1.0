@@ -3,7 +3,7 @@ import FontAwesomeClasses from './fontAwesomeClasses';
 
 const CARDS_NUMBER = 20;
 
-export default () =>{
+const DealCards = () =>{
     const fontAwesomeClasses = FontAwesomeClasses;
     let cards = [];
 
@@ -12,9 +12,11 @@ export default () =>{
         const card = {
             icon: fontAwesomeClasses[index],
             isMatch: false,
+            flipped: false
         }
         cards.push(card);
         cards.push({...card});
     }
     return shuffle(cards);
 }
+export default DealCards
