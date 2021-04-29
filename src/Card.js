@@ -7,7 +7,7 @@ import "@kennethormandy/react-flipcard/dist/Flipcard.css";
 export default class Card extends Component {
   render() {
     const {icon, flipped, selectCard} = this.props;
-    console.log('renderizo')
+    
     return (
       <div className="card" onClick={() => selectCard()}>
         <Flipcard className="flip" flipped={flipped}>

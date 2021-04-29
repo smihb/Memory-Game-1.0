@@ -59,7 +59,6 @@ class App extends Component{
       }
       let attempsNumber = this.state.attemps
       this.setState({attemps: attempsNumber+1})
-      console.log('intentos', this.state.attemps) 
     }
   }
   restartGame(){

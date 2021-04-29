@@ -5,7 +5,6 @@ import './Board.css';
 export default class Board extends Component{
     render(){
         const {cards, selectCard} = this.props
-        console.log('tablero renderizo')
 
         return (
             <div className="board" >
